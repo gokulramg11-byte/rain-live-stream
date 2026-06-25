@@ -1,0 +1,62 @@
+name: Rain Stream Daily
+
+on:
+  schedule:
+    - cron: '30 16 * * *'
+  workflow_dispatch:
+
+jobs:
+  stream:
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install FFmpeg
+        run: |
+          sudo apt update
+          sudo apt install ffmpeg -y
+
+      - name: Start Stream Part 1
+        run: |
+          timeout 4h ffmpeg -re -stream_loop -1 -i YouCut_20260625_211645593.mp4 \
+          -c:v libx264 \
+          -preset veryfast \
+          -b:v 2500k \
+          -maxrate 2500k \
+          -bufsize 5000k \
+          -pix_fmt yuv420p \
+          -c:a aac \
+          -b:a 128k \
+          -ar 44100 \
+          -f flv rtmp://a.rtmp.youtube.com/live2/${{ secrets.YOUTUBE_STREAM_KEY }}
+
+  stream2:
+    needs: stream
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install FFmpeg
+        run: |
+          sudo apt update
+          sudo apt install ffmpeg -y
+
+      - name: Start Stream Part 2
+        run: |
+          timeout 4h ffmpeg -re -stream_loop -1 -i YouCut_20260625_211645593.mp4 \
+          -c:v libx264 \
+          -preset veryfast \
+          -b:v 2500k \
+          -maxrate 2500k \
+          -bufsize 5000k \
+          -pix_fmt yuv420p \
+          -c:a aac \
+          -b:a 128k \
+          -ar 44100 \
+          -f flv rtmp://a.rtmp.youtube.com/live2/${{ secrets.YOUTUBE_STREAM_KEY }}
