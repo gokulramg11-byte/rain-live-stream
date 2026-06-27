@@ -21,7 +21,7 @@ jobs:
 
       - name: Start Stream Part 1
         run: |
-          timeout 4h ffmpeg -re -stream_loop -1 -i YouCut_20260625_211645593.mp4 \
+          timeout 4h ffmpeg -re -stream_loop -1 -i rain.mp4 \
           -c:v libx264 \
           -preset veryfast \
           -b:v 2500k \
@@ -49,7 +49,7 @@ jobs:
 
       - name: Start Stream Part 2
         run: |
-          timeout 4h ffmpeg -re -stream_loop -1 -i YouCut_20260625_211645593.mp4 \
+          timeout 4h ffmpeg -re -stream_loop -1 -i rain.mp4 \
           -c:v libx264 \
           -preset veryfast \
           -b:v 2500k \
